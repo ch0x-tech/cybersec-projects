@@ -1,0 +1,2 @@
+[2026-03-25 00:52:14] IP: 127.0.0.1 | Email: test@gmail.com | Password: Test1234!
+[2026-03-26 08:30:35] IP: 127.0.0.1 | Email: test@gmail.com | Password: Test1234!

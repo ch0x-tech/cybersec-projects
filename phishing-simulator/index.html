@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vérificateur de mot de passe</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .card { background: #16213e; border: 1px solid #0f3460; border-radius: 12px; padding: 32px; width: 100%; max-width: 460px; }
+    h2 { color: #e94560; font-size: 20px; margin-bottom: 24px; text-align: center; }
+    label { color: #a8b2d8; font-size: 13px; display: block; margin-bottom: 8px; }
+    input { width: 100%; padding: 12px 16px; font-size: 15px; border: 1.5px solid #0f3460; border-radius: 8px; background: #0f3460; color: #ccd6f6; outline: none; }
+    input:focus { border-color: #e94560; }
+    .barre-bg { height: 8px; border-radius: 4px; background: #0f3460; margin: 16px 0 8px; overflow: hidden; }
+    .barre-fg { height: 100%; border-radius: 4px; width: 0%; transition: width .3s, background .3s; }
+    .niveau { font-size: 13px; font-weight: bold; margin-bottom: 16px; color: #a8b2d8; }
+    .regle { font-size: 13px; display: flex; align-items: center; gap: 10px; color: #5a6a8a; margin-bottom: 8px; transition: color .2s; }
+    .regle.ok { color: #64ffda; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #0f3460; flex-shrink: 0; transition: background .2s; }
+    .regle.ok .dot { background: #64ffda; }
+    .entropie { font-size: 12px; color: #5a6a8a; margin-top: 16px; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h2>Vérificateur de mot de passe</h2>
+  <label>Entre ton mot de passe</label>
+  <input type="password" id="mdp" placeholder="Tape ici..." oninput="verifier(this.value)">
+  <div class="barre-bg"><div class="barre-fg" id="barre"></div></div>
+  <div class="niveau" id="niveau">En attente...</div>
+  <div class="regle" id="r1"><span class="dot"></span> Au moins 8 caractères</div>
+  <div class="regle" id="r2"><span class="dot"></span> Une lettre majuscule</div>
+  <div class="regle" id="r3"><span class="dot"></span> Un chiffre (0-9)</div>
+  <div class="regle" id="r4"><span class="dot"></span> Un symbole (!@#$...)</div>
+  <div class="regle" id="r5"><span class="dot"></span> Variété de caractères</div>
+  <div class="entropie" id="entropie"></div>
+</div>
+
+<script>
+function calculerEntropie(mdp) {
+  let pool = 0;
+  if (/[a-z]/.test(mdp)) pool += 26;
+  if (/[A-Z]/.test(mdp)) pool += 26;
+  if (/[0-9]/.test(mdp)) pool += 10;
+  if (/[^a-zA-Z0-9]/.test(mdp)) pool += 32;
+  return pool > 0 ? Math.round(mdp.length * Math.log2(pool)) : 0;
+}
+
+function verifier(mdp) {
+  const r1 = mdp.length >= 8;
+  const r2 = /[A-Z]/.test(mdp);
+  const r3 = /[0-9]/.test(mdp);
+  const r4 = /[!@#$%^&*(),.?":{}|<>]/.test(mdp);
+  const r5 = new Set(mdp).size > 6;
+
+  [r1,r2,r3,r4,r5].forEach((ok, i) => {
+    document.getElementById('r'+(i+1)).classList.toggle('ok', ok);
+  });
+
+  const score = [r1,r2,r3,r4,r5].filter(Boolean).length;
+  const barre = document.getElementById('barre');
+  const niveau = document.getElementById('niveau');
+  const entropie = document.getElementById('entropie');
+  const pct = (score / 5) * 100;
+
+  barre.style.width = mdp.length === 0 ? '0%' : pct + '%';
+
+  if (mdp.length === 0) {
+    barre.style.background = 'transparent';
+    niveau.textContent = 'En attente...';
+    niveau.style.color = '#a8b2d8';
+    entropie.textContent = '';
+  } else if (score <= 2) {
+    barre.style.background = '#e94560';
+    niveau.textContent = 'Faible — ajoute plus de complexité';
+    niveau.style.color = '#e94560';
+  } else if (score === 3) {
+    barre.style.background = '#f0a500';
+    niveau.textContent = 'Moyen — presque bon !';
+    niveau.style.color = '#f0a500';
+  } else if (score === 4) {
+    barre.style.background = '#64ffda';
+    niveau.textContent = 'Bon — encore un effort !';
+    niveau.style.color = '#64ffda';
+  } else {
+    barre.style.background = '#64ffda';
+    niveau.textContent = 'Fort — excellent mot de passe !';
+    niveau.style.color = '#64ffda';
+  }
+
+  if (mdp.length > 0) {
+    const e = calculerEntropie(mdp);
+    entropie.textContent = 'Entropie : ' + e + ' bits — ' + (e < 40 ? 'trop faible' : e < 60 ? 'acceptable' : 'très bon');
+  }
+}
+</script>
+</body>
+</html>

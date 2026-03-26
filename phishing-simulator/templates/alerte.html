@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Alerte Sécurité</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .card { background: #16213e; border: 2px solid #e94560; border-radius: 12px; padding: 40px; width: 100%; max-width: 500px; text-align: center; }
+    .icone { font-size: 60px; margin-bottom: 20px; }
+    h1 { color: #e94560; font-size: 24px; margin-bottom: 16px; }
+    p { color: #a8b2d8; font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+    .email { color: #64ffda; font-weight: bold; }
+    .conseils { background: #0f3460; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: left; }
+    .conseils h3 { color: #64ffda; font-size: 15px; margin-bottom: 12px; }
+    .conseils li { color: #a8b2d8; font-size: 14px; margin-bottom: 8px; margin-left: 16px; }
+    .btn { display: inline-block; margin-top: 20px; padding: 12px 32px; background: #e94560; color: white; border-radius: 6px; text-decoration: none; font-size: 15px; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="icone">⚠️</div>
+  <h1>Attention — Vous avez été piégé !</h1>
+  <p>Vous avez entré vos identifiants sur une fausse page de connexion.</p>
+  <p>Dans une vraie attaque, le compte <span class="email">{{ email }}</span> serait maintenant compromis.</p>
+  <div class="conseils">
+    <h3>Comment se protéger :</h3>
+    <ul>
+      <li>Toujours vérifier l'URL dans la barre d'adresse</li>
+      <li>Ne jamais cliquer sur des liens dans les emails</li>
+      <li>Activer l'authentification à deux facteurs (2FA)</li>
+      <li>Utiliser un gestionnaire de mots de passe</li>
+      <li>Vérifier le certificat SSL (cadenas vert)</li>
+    </ul>
+  </div>
+  <p>Ceci est une simulation éducative. Vos données n'ont pas été volées.</p>
+  <a href="/" class="btn">Retour à l'accueil</a>
+</div>
+</body>
+</html>
